@@ -63,7 +63,7 @@ var doStory = function() {
   This method plays a story sound.
 */
 var playMusic = function() {
-  if (storyNode.getId() == 0) {
+  if (storyNode.getId() == STORY_STATES.START) {
     sfx[0].mus.play();
   }
 };

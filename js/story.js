@@ -1,6 +1,20 @@
+// global variables, story state
+let STORY_STATES = {
+  INVALID: -1, 
+  HOME:     0,
+  START:    1,
+  TRAVEL:   2,
+  MOUNTAIN: 3,
+  TREE:     4,
+  SHOP:     5,
+  STOP:     6,
+  RETURN:   7,
+  NIGHT:    8
+};
+
 // global variables, story text
-var feels = ["cranky", "hungry", "sleepy", "happy"];
-var locs = ["bus stop", "candy shop", "treetop", "mountaintop"];
+let feels = ["cranky", "hungry", "sleepy", "happy"];
+let locs = ["bus stop", "candy shop", "treetop", "mountaintop"];
 
 
 /*
@@ -73,21 +87,20 @@ class StoryNode {
 
 /* The 'Morning' StoryNode */
 let nodeMorning = new StoryNode(
-  0,  // id
+  STORY_STATES.START,   // id
   // stripFunc
   function() {
-    return ["morning.png", "lop-face.jpeg"];
+    return ["morning.png", "lop-face-" + storyState.getFeel() + ".jpeg"];
   },
   // txtFunc
   function() {
-    let feel = feels[ getRandomInt(0, feels.length - 1) ];
-    return ["Good morning, Lop. O, ", feel, " Lop."].join("");
+    return ["Good morning, Lop. O, ", storyState.getFeel(), " Lop."].join("");
   }
 );
 
 /* The 'Travel' StoryNode */
 let nodeTravelR = new StoryNode(
-  1,  // id
+  STORY_STATES.TRAVEL,   // id
   // stripFunc
   function() {
     let strip = [
@@ -101,26 +114,28 @@ let nodeTravelR = new StoryNode(
   },
   // txtFunc
   function() {
-    return "Hop, hop, hop. The lop went to the candy shop.";
+    let loc = storyState.getLocation();
+    return "Hop, hop, hop. The lop went to the " + loc + ".";
   }
 );
 
 /* The 'Shop' StoryNode */
 let nodeShop = new StoryNode(
-  2,  // id
+  STORY_STATES.SHOP,    // id
   // stripFunc
   function() {
     return ["lop-face.jpeg", "lollipop.png"];;
   },
   // txtFunc
   function() {
-    return "At the candy shop, the lop bought a lollipop.";
+    let loc = storyState.getLocation();
+    return "At the " + loc + ", the lop bought a lollipop.";
   }
 );
 
 /* The 'Travel Home' StoryNode */
 let nodeTravelL = new StoryNode(
-  3,  // id
+  STORY_STATES.RETURN,   // id
   // stripFunc
   function() {
     let strip = [
@@ -140,7 +155,7 @@ let nodeTravelL = new StoryNode(
 
 /* The 'Night' StoryNode */
 let nodeNight = new StoryNode(
-  4,  // id
+  STORY_STATES.NIGHT,   // id
   // stripFunc
   function() {
     return ["lop-face.jpeg", "night.png"];
@@ -153,9 +168,13 @@ let nodeNight = new StoryNode(
 
 
 let storyNodes = [
+  null,
   nodeMorning,
   nodeTravelR,
+  null,
+  null,
   nodeShop,
+  null,
   nodeTravelL,
   nodeNight
 ];
