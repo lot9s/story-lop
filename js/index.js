@@ -1,11 +1,8 @@
 // global variables, story state
-var dayState = -1;
+let storyNode = null;
 
 // global variables, comic strip
 var IMG_DIR = "res/img/";
-
-// global variables, story text
-var feels = ["cranky", "hungry", "sleepy", "happy"];
 
 // global variables, audio
 var sfx = [
@@ -40,62 +37,41 @@ var clearStoryElements = function() {
   $("#panel-3").hide();
   $("#panel-4").hide();
 
-  // hide the story text
+  // hide the text
   $("#story-txt").hide();
+  $("#input-txt").hide();
+
+  // hide the buttons
+  $("#button-continue").hide();
+  $("#buttons-yn").hide();
 };
 
 /*
   This method starts/continues the story.
+
+  @arg {string} input optional input obtained from player
 */
-var doStory = function() {
+var doStory = function(input) {
+  // clear UI
   clearStoryElements();
 
-  step();
+  // advance the narrative
+  storyNode = narrative.step(input);
 
   playMusic();
 
+  // render UI
   renderStrip();
   renderText();
   renderButtons();
-}
-
-/*
-  This method generates a random integer between 2 values.
-
-  Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-
-  @arg {number} min
-  @arg {number} max
-  @return {number}
-*/
-var getRandomInt = function(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-/*
-  This method retrieves story text for the "Good Morning" scene.
-
-  @return {string}
-*/
-var getTextMorning = function() {
-  var feel = feels[ getRandomInt(0, feels.length - 1) ];
-  return ["Good morning, Lop. O, ", feel, " Lop."].join("");
 };
 
 /*
   This method plays a story sound.
 */
 var playMusic = function() {
-  switch (dayState) {
-    // morning
-    case 0:
-      sfx[0].mus.play();
-      break;
-
-    default:  break; 
+  if (storyNode.getId() == STORY_STATES.START) {
+    sfx[0].mus.play();
   }
 };
 
@@ -103,57 +79,19 @@ var playMusic = function() {
   This method renders buttons used to advance the story.
 */
 var renderButtons = function() {
-  switch (dayState) {
-    default:
-      $("#button-continue").show();
-      break;
+  if (storyNode.getId() == STORY_STATES.START) {
+    $("#buttons-yn").css('display', 'flex');
+    $("#buttons-yn").show();
+  } else {
+    $("#button-continue").show();
   }
-}
+};
 
 /*
   This method renders the story's comic strip.
 */
 var renderStrip = function() {
-  var strip = [];
-
-  // determine contents of comic strip
-  switch (dayState) {
-    // morning
-    case 0:
-      strip.push("morning.png");
-      strip.push("lop-face.jpeg");
-      break;
-
-    // travel
-    case 1:
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
-      break;
-
-    // location
-    case 2:
-      strip.push("lop-face.jpeg");
-      strip.push("lollipop.png");
-      break;
-
-    // return travel
-    case 3:
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
-      break;
-
-    // return travel
-    case 4:
-      strip.push("lop-face.jpeg");
-      strip.push("night.png");
-      break;
-    default:
-      break;
-  }
+  var strip = storyNode.getStrip();
 
   // populate the comic strip
   for (var i = 0; i < strip.length; i++) {
@@ -168,47 +106,16 @@ var renderStrip = function() {
   This method renders story text on the page.
 */
 var renderText = function() {
-  var text = "";
+  var text = storyNode.getText();
 
-  switch (dayState) {
-    // morning
-    case 0:
-      text = getTextMorning();
-      break;
-
-    // travel
-    case 1:
-      text = "Hop, hop, hop. The lop went to the shop.";
-      break;
-
-    // location
-    case 2:
-      text = "At the shop, the lop bought a lollipop.";
-      break;
-
-    // return travel
-    case 3:
-      text = "Hop, hop, hop. All the way home went the lop.";
-      break;
-
-    // night
-    case 4:
-      text = "Good night, Lop. O, sleepy Lop.";
-      break;
-
-    default:
-      break;
-  }
-
+  // populate the story text
   $("#story-txt").text(text);
   $("#story-txt").show();
-};
 
-/*
-  This method advances the story by 1 step.
-*/
-var step = function() {
-  dayState = (dayState + 1) % 5;
+  // populate the input text
+  if (storyNode.getId() == STORY_STATES.START) {
+    $("#input-txt").show();
+  }
 };
 
 
@@ -223,6 +130,16 @@ $(document).ready(function() {
     doStory();
   });
 
+  // this defines the functionality of the 'YES' button
+  $('#button-yes').click(function() {
+    doStory("yes");
+  });
+
+  // this defines the functionality of the 'NO' button
+  $('#button-no').click(function() {
+    doStory("no");
+  });
+
   // this defines the functionality of the 'START' button
   $('#button-start').click(function() {
     // hide this button forever
@@ -234,7 +151,9 @@ $(document).ready(function() {
     }
 
     allowDisplay( $("#story-txt") );
+    allowDisplay( $("#input-txt") );
     allowDisplay( $("#button-continue") );
+    allowDisplay( $("#buttons-yn") );
 
     // start the experience
     doStory();
