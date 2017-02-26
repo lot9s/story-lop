@@ -76,16 +76,6 @@ var getRandomInt = function(min, max) {
 };
 
 /*
-  This method retrieves story text for the "Good Morning" scene.
-
-  @return {string}
-*/
-var getTextMorning = function() {
-  var feel = feels[ getRandomInt(0, feels.length - 1) ];
-  return ["Good morning, Lop. O, ", feel, " Lop."].join("");
-};
-
-/*
   This method plays a story sound.
 */
 var playMusic = function() {
@@ -120,37 +110,29 @@ var renderStrip = function() {
   switch (dayState) {
     // morning
     case 0:
-      strip.push("morning.png");
-      strip.push("lop-face.jpeg");
+      strip = nodeMorning.getStrip();
       break;
 
     // travel
     case 1:
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
-      strip.push("lop-right.jpeg");
+      strip = nodeTravelR.getStrip();
       break;
 
     // location
     case 2:
-      strip.push("lop-face.jpeg");
-      strip.push("lollipop.png");
+      strip = nodeShop.getStrip();
       break;
 
     // return travel
     case 3:
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
-      strip.push("lop-left.jpeg");
+      strip = nodeTravelL.getStrip();
       break;
 
     // return travel
     case 4:
-      strip.push("lop-face.jpeg");
-      strip.push("night.png");
+      strip = nodeNight.getStrip();
       break;
+
     default:
       break;
   }
@@ -173,27 +155,27 @@ var renderText = function() {
   switch (dayState) {
     // morning
     case 0:
-      text = getTextMorning();
+      text = nodeMorning.getText();
       break;
 
     // travel
     case 1:
-      text = "Hop, hop, hop. The lop went to the shop.";
+      text = nodeTravelR.getText();
       break;
 
     // location
     case 2:
-      text = "At the shop, the lop bought a lollipop.";
+      text = nodeShop.getText();
       break;
 
     // return travel
     case 3:
-      text = "Hop, hop, hop. All the way home went the lop.";
+      text = nodeTravelL.getText();
       break;
 
     // night
     case 4:
-      text = "Good night, Lop. O, sleepy Lop.";
+      text = nodeNight.getText();
       break;
 
     default:

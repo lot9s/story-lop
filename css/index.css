@@ -1,6 +1,10 @@
 body {
 	font-family: 'Noto Sans', serif;
 	text-align: center;
+
+	min-width: 1000px;
+	width: auto !important;
+	width:1000px;
 }
 
 h3 {
