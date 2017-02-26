@@ -20,6 +20,7 @@ var noFunction = function() {};
 var yesFunction = function() {};
 
 
+
 /*
   This method allows an existing HTML element to be displayed.
 
@@ -47,6 +48,8 @@ var clearStoryElements = function() {
   This method starts/continues the story.
 */
 var doStory = function() {
+  clearStoryElements();
+
   step();
 
   playMusic();
@@ -121,6 +124,33 @@ var renderStrip = function() {
       strip.push("lop-face.jpeg");
       break;
 
+    // travel
+    case 1:
+      strip.push("lop-right.jpeg");
+      strip.push("lop-right.jpeg");
+      strip.push("lop-right.jpeg");
+      strip.push("lop-right.jpeg");
+      break;
+
+    // location
+    case 2:
+      strip.push("lop-face.jpeg");
+      strip.push("lollipop.png");
+      break;
+
+    // return travel
+    case 3:
+      strip.push("lop-left.jpeg");
+      strip.push("lop-left.jpeg");
+      strip.push("lop-left.jpeg");
+      strip.push("lop-left.jpeg");
+      break;
+
+    // return travel
+    case 4:
+      strip.push("lop-face.jpeg");
+      strip.push("night.png");
+      break;
     default:
       break;
   }
@@ -146,6 +176,26 @@ var renderText = function() {
       text = getTextMorning();
       break;
 
+    // travel
+    case 1:
+      text = "Hop, hop, hop. The lop went to the shop.";
+      break;
+
+    // location
+    case 2:
+      text = "At the shop, the lop bought a lollipop.";
+      break;
+
+    // return travel
+    case 3:
+      text = "Hop, hop, hop. All the way home went the lop.";
+      break;
+
+    // night
+    case 4:
+      text = "Good night, Lop. O, sleepy Lop.";
+      break;
+
     default:
       break;
   }
@@ -158,7 +208,7 @@ var renderText = function() {
   This method advances the story by 1 step.
 */
 var step = function() {
-  dayState = dayState + 1 % 4;
+  dayState = (dayState + 1) % 5;
 };
 
 
@@ -170,7 +220,7 @@ var step = function() {
 $(document).ready(function() {
   // this defines the functionality of the 'CONTINUE' button
   $('#button-continue').click(function() {
-    // TODO: make this call doStory()
+    doStory();
   });
 
   // this defines the functionality of the 'START' button
