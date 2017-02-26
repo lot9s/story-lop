@@ -1,6 +1,12 @@
 // global variables, story state
 var dayState = -1;
 
+// global variables, comic strip
+var IMG_DIR = "res/img/";
+
+// global variables, story text
+var feels = ["cranky", "hungry", "sleepy", "happy"];
+
 // global variables, audio
 var sfx = [
   {
@@ -10,10 +16,19 @@ var sfx = [
 ];
 
 // global variables, functions
-var continueFunction = function() {};
 var noFunction = function() {};
 var yesFunction = function() {};
 
+
+/*
+  This method allows an existing HTML element to be displayed.
+
+  @arg {Object} element jQuery object corresponding to HTML element
+*/
+var allowDisplay = function(element) {
+  element.hide();
+  element.removeClass("no-display");
+};
 
 /*
   This method clears the page's story elements.
@@ -42,11 +57,29 @@ var doStory = function() {
 }
 
 /*
-  This method blocks until player input is received.
+  This method generates a random integer between 2 values.
+
+  Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+
+  @arg {number} min
+  @arg {number} max
+  @return {number}
 */
-var getPlayerInput = function() {
-  // TODO: everything
-  return 0;
+var getRandomInt = function(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+/*
+  This method retrieves story text for the "Good Morning" scene.
+
+  @return {string}
+*/
+var getTextMorning = function() {
+  var feel = feels[ getRandomInt(0, feels.length - 1) ];
+  return ["Good morning, Lop. O, ", feel, " Lop."].join("");
 };
 
 /*
@@ -78,30 +111,47 @@ var renderButtons = function() {
   This method renders the story's comic strip.
 */
 var renderStrip = function() {
+  var strip = [];
+
+  // determine contents of comic strip
   switch (dayState) {
     // morning
     case 0:
-      $("#panel-2").show();
+      strip.push("morning.png");
+      strip.push("lop-face.jpeg");
       break;
 
     default:
       break;
   }
+
+  // populate the comic strip
+  for (var i = 0; i < strip.length; i++) {
+    var selector = "#panel-" + strip.length + "-img-" + (i+1) + " img";
+    $(selector).attr("src", IMG_DIR + strip[i]);
+  }
+
+  $("#panel-" + strip.length).show();
 };
 
 /*
   This method renders story text on the page.
 */
 var renderText = function() {
+  var text = "";
+
   switch (dayState) {
     // morning
     case 0:
-      $("#story-txt").show();
+      text = getTextMorning();
       break;
 
     default:
       break;
   }
+
+  $("#story-txt").text(text);
+  $("#story-txt").show();
 };
 
 /*
@@ -118,25 +168,23 @@ var step = function() {
   setting up the experience.
 */
 $(document).ready(function() {
+  // this defines the functionality of the 'CONTINUE' button
+  $('#button-continue').click(function() {
+    // TODO: make this call doStory()
+  });
+
   // this defines the functionality of the 'START' button
   $('#button-start').click(function() {
     // hide this button forever
     $(this).hide();
 
-    // set up the comic strip part of the UI
+    // --- alow UI elements to be displayed at this stage --
     for (var i = 2; i < 5; i++) {
-      console.log(i);
-      $("#panel-" + i).hide();
-      $("#panel-" + i).removeClass("no-display");
+      allowDisplay( $("#panel-" + i) );
     }
 
-    // set up the button part of the UI
-    $("#story-txt").hide();
-    $("#story-txt").removeClass("no-display");
-
-    // set up the button part of the UI
-    $("#button-continue").hide();
-    $("#button-continue").removeClass("no-display");
+    allowDisplay( $("#story-txt") );
+    allowDisplay( $("#button-continue") );
 
     // start the experience
     doStory();
