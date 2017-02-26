@@ -1,11 +1,8 @@
 // global variables, story state
-var dayState = -1;
+let storyNode = null;
 
 // global variables, comic strip
 var IMG_DIR = "res/img/";
-
-// global variables, story text
-var feels = ["cranky", "hungry", "sleepy", "happy"];
 
 // global variables, audio
 var sfx = [
@@ -48,44 +45,26 @@ var clearStoryElements = function() {
   This method starts/continues the story.
 */
 var doStory = function() {
+  // clear UI
   clearStoryElements();
 
-  step();
+  // advance the narrative
+  storyNode = narrative.step();
 
   playMusic();
 
+  // render UI
   renderStrip();
   renderText();
   renderButtons();
-}
-
-/*
-  This method generates a random integer between 2 values.
-
-  Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-
-  @arg {number} min
-  @arg {number} max
-  @return {number}
-*/
-var getRandomInt = function(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 /*
   This method plays a story sound.
 */
 var playMusic = function() {
-  switch (dayState) {
-    // morning
-    case 0:
-      sfx[0].mus.play();
-      break;
-
-    default:  break; 
+  if (storyNode.getId() == 0) {
+    sfx[0].mus.play();
   }
 };
 
@@ -93,49 +72,14 @@ var playMusic = function() {
   This method renders buttons used to advance the story.
 */
 var renderButtons = function() {
-  switch (dayState) {
-    default:
-      $("#button-continue").show();
-      break;
-  }
-}
+  $("#button-continue").show();
+};
 
 /*
   This method renders the story's comic strip.
 */
 var renderStrip = function() {
-  var strip = [];
-
-  // determine contents of comic strip
-  switch (dayState) {
-    // morning
-    case 0:
-      strip = nodeMorning.getStrip();
-      break;
-
-    // travel
-    case 1:
-      strip = nodeTravelR.getStrip();
-      break;
-
-    // location
-    case 2:
-      strip = nodeShop.getStrip();
-      break;
-
-    // return travel
-    case 3:
-      strip = nodeTravelL.getStrip();
-      break;
-
-    // return travel
-    case 4:
-      strip = nodeNight.getStrip();
-      break;
-
-    default:
-      break;
-  }
+  var strip = storyNode.getStrip();
 
   // populate the comic strip
   for (var i = 0; i < strip.length; i++) {
@@ -150,47 +94,11 @@ var renderStrip = function() {
   This method renders story text on the page.
 */
 var renderText = function() {
-  var text = "";
+  var text = storyNode.getText();
 
-  switch (dayState) {
-    // morning
-    case 0:
-      text = nodeMorning.getText();
-      break;
-
-    // travel
-    case 1:
-      text = nodeTravelR.getText();
-      break;
-
-    // location
-    case 2:
-      text = nodeShop.getText();
-      break;
-
-    // return travel
-    case 3:
-      text = nodeTravelL.getText();
-      break;
-
-    // night
-    case 4:
-      text = nodeNight.getText();
-      break;
-
-    default:
-      break;
-  }
-
+  // populate the story text
   $("#story-txt").text(text);
   $("#story-txt").show();
-};
-
-/*
-  This method advances the story by 1 step.
-*/
-var step = function() {
-  dayState = (dayState + 1) % 5;
 };
 
 
