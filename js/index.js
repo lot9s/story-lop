@@ -137,7 +137,7 @@ $(document).ready(function() {
 
   // this defines the functionality of the 'NO' button
   $('#button-no').click(function() {
-    doStory("yes"); // TODO: change this
+    doStory("no");
   });
 
   // this defines the functionality of the 'START' button

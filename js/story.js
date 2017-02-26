@@ -85,7 +85,20 @@ class StoryNode {
 */
 /* -------------------------------------------------------------------------- */
 
-/* The 'Morning' StoryNode */
+/* The 'Home' StoryNode */
+let nodeHome = new StoryNode(
+  STORY_STATES.HOME,   // id
+  // stripFunc
+  function() {
+    return ["lop-face.jpeg", "pillow.png"];
+  },
+  // txtFunc
+  function() {
+    return "Flop, flop, flop. On its cot, the lop did flop. ";
+  }
+);
+
+/* The 'Start' StoryNode */
 let nodeMorning = new StoryNode(
   STORY_STATES.START,   // id
   // stripFunc
@@ -168,7 +181,7 @@ let nodeNight = new StoryNode(
 
 
 let storyNodes = [
-  null,
+  nodeHome,
   nodeMorning,
   nodeTravelR,
   null,

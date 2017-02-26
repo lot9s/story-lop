@@ -23,9 +23,6 @@ class Narrative {
     // --- determine what the next story state is ---
     let nextState = STORY_STATES.INVALID;
 
-    // TODO: change this
-    input = "yes";
-
     // start / restart narrative
     if (!this.curNode || this.curNode.getId() == STORY_STATES.NIGHT) {
       // determine how Lop feels
