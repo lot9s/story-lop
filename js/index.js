@@ -37,19 +37,26 @@ var clearStoryElements = function() {
   $("#panel-3").hide();
   $("#panel-4").hide();
 
-  // hide the story text
+  // hide the text
   $("#story-txt").hide();
+  $("#input-txt").hide();
+
+  // hide the buttons
+  $("#button-continue").hide();
+  $("#buttons-yn").hide();
 };
 
 /*
   This method starts/continues the story.
+
+  @arg {string} input optional input obtained from player
 */
-var doStory = function() {
+var doStory = function(input) {
   // clear UI
   clearStoryElements();
 
   // advance the narrative
-  storyNode = narrative.step();
+  storyNode = narrative.step(input);
 
   playMusic();
 
@@ -72,7 +79,12 @@ var playMusic = function() {
   This method renders buttons used to advance the story.
 */
 var renderButtons = function() {
-  $("#button-continue").show();
+  if (storyNode.getId() == STORY_STATES.START) {
+    $("#buttons-yn").css('display', 'flex');
+    $("#buttons-yn").show();
+  } else {
+    $("#button-continue").show();
+  }
 };
 
 /*
@@ -99,6 +111,11 @@ var renderText = function() {
   // populate the story text
   $("#story-txt").text(text);
   $("#story-txt").show();
+
+  // populate the input text
+  if (storyNode.getId() == STORY_STATES.START) {
+    $("#input-txt").show();
+  }
 };
 
 
@@ -113,6 +130,16 @@ $(document).ready(function() {
     doStory();
   });
 
+  // this defines the functionality of the 'YES' button
+  $('#button-yes').click(function() {
+    doStory("yes");
+  });
+
+  // this defines the functionality of the 'NO' button
+  $('#button-no').click(function() {
+    doStory("yes"); // TODO: change this
+  });
+
   // this defines the functionality of the 'START' button
   $('#button-start').click(function() {
     // hide this button forever
@@ -124,7 +151,9 @@ $(document).ready(function() {
     }
 
     allowDisplay( $("#story-txt") );
+    allowDisplay( $("#input-txt") );
     allowDisplay( $("#button-continue") );
+    allowDisplay( $("#buttons-yn") );
 
     // start the experience
     doStory();

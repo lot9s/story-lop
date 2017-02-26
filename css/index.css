@@ -28,11 +28,41 @@ img {
 	width: 128px;
 }
 
+#buttons-yn {
+	margin-left: auto;
+	margin-right: auto;
+	width: 256px;
+}
+
+#button-yes {
+	background: #6699ff;
+	color: #dddddd;
+	width: 128px;
+}
+
+#button-no {
+	background: #6699ff;
+	color: #dddddd;
+	width: 128px;
+}
+
 #button-start:hover, #button-continue:hover {
 	background: #99ccff;
 	color: #dddddd;
 	margin-left: auto;
 	margin-right: auto;
+	width: 128px;
+}
+
+#button-yes:hover {
+	background: #99ccff;
+	color: #dddddd;
+	width: 128px;
+}
+
+#button-no:hover {
+	background: #99ccff;
+	color: #dddddd;
 	width: 128px;
 }
 
