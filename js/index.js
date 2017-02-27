@@ -9,6 +9,10 @@ var sfx = [
   {
     mus: new Audio("res/mus/morning.wav"),
     volume: 1.0
+  },
+  {
+    mus: new Audio("res/mus/night.wav"),
+    volume: 1.0
   }
 ];
 
@@ -70,8 +74,14 @@ var doStory = function(input) {
   This method plays a story sound.
 */
 var playMusic = function() {
+  // morning
   if (storyNode.getId() == STORY_STATES.START) {
     sfx[0].mus.play();
+  }
+
+  // night
+  if (storyNode.getId() == STORY_STATES.NIGHT) {
+    sfx[1].mus.play();
   }
 };
 
