@@ -132,6 +132,40 @@ let nodeTravelR = new StoryNode(
   }
 );
 
+/* The 'Tree' StoryNode */
+let nodeMountain = new StoryNode(
+  STORY_STATES.MOUNTAIN, // id
+  // stripFunc
+  function() {
+    return ["lop-face.jpeg", "mountain.png"];;
+  },
+  // txtFunc
+  function() {
+    let loc = storyState.getLocation();
+    let text = [
+      "From the ", 
+      loc,
+      " the lop could see the treetop, the candy shop, and the bus stop."
+    ].join('');
+
+    return text;
+  }
+);
+
+/* The 'Tree' StoryNode */
+let nodeTree = new StoryNode(
+  STORY_STATES.SHOP,    // id
+  // stripFunc
+  function() {
+    return ["lop-face.jpeg", "tree.png"];;
+  },
+  // txtFunc
+  function() {
+    let loc = storyState.getLocation();
+    return "At the " + loc + ", the lop ate some slop.";
+  }
+);
+
 /* The 'Shop' StoryNode */
 let nodeShop = new StoryNode(
   STORY_STATES.SHOP,    // id
@@ -143,6 +177,20 @@ let nodeShop = new StoryNode(
   function() {
     let loc = storyState.getLocation();
     return "At the " + loc + ", the lop bought a lollipop.";
+  }
+);
+
+/* The 'Stop' StoryNode */
+let nodeStop = new StoryNode(
+  STORY_STATES.STOP,    // id
+  // stripFunc
+  function() {
+    return ["lop-face.jpeg", "stop.png"];;
+  },
+  // txtFunc
+  function() {
+    let loc = storyState.getLocation();
+    return "At the " + loc + ", the lop met a fop.";
   }
 );
 
@@ -184,10 +232,10 @@ let storyNodes = [
   nodeHome,
   nodeMorning,
   nodeTravelR,
-  null,
-  null,
+  nodeMountain,
+  nodeTree,
   nodeShop,
-  null,
+  nodeStop,
   nodeTravelL,
   nodeNight
 ];

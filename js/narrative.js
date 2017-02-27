@@ -44,15 +44,32 @@ class Narrative {
     // start -> travel
     if (this.curNode.getId() == STORY_STATES.START && input == "yes") {
       // determine Lop's destination
-      // TODO: make this random
-      this.state.setLocation("candy shop");
+      let loc = locs[ getRandomInt(0, locs.length - 1) ];
+      this.state.setLocation(loc);
 
       nextState = STORY_STATES.TRAVEL;
     }
 
     // travel
     if (this.curNode.getId() == STORY_STATES.TRAVEL) {
-      nextState = STORY_STATES.SHOP;
+      let loc = this.state.getLocation();
+
+      // set the next story state
+      if (loc == "mountaintop") {
+        nextState = STORY_STATES.MOUNTAIN;
+      }
+
+      if (loc == "treetop") {
+        nextState = STORY_STATES.TREE;
+      }
+
+      if (loc == "candy shop") {
+        nextState = STORY_STATES.SHOP;
+      }
+
+      if (loc == "bus stop") {
+        nextState = STORY_STATES.STOP;
+      }
     }
 
     // location
